@@ -1,4 +1,4 @@
-//! --- Day 2: Password Philosophy ---
+//! # --- Day 2: Password Philosophy ---
 //!
 //! Your flight departs in a few days from the coastal airport; the
 //! easiest way down to the coast from here is via toboggan.
@@ -36,7 +36,7 @@
 //!
 //! **How many passwords are valid** according to their policies?
 //!
-//! --- Part Two ---
+//! ## --- Part Two ---
 //!
 //! While it appears you validated the passwords correctly, they don't
 //! seem to be what the Official Toboggan Corporate Authentication System
