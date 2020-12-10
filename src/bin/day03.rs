@@ -159,13 +159,13 @@ fn main() -> Result<(), &'static str> {
         return Err("not enough arguments");
     }
     let filename = &args[1];
-    println!("Load input file {}", filename);
+    println!("Load input file {}.", filename);
 
     let map_str = fs::read_to_string(filename).expect("Something went wrong reading the file");
     let map = parse_input(&map_str);
     let trail = Slope { right: 3, down: 1 };
     let tree_count = map.count_tree_hits(&trail);
-    println!("Hit tree {} times", tree_count);
+    println!("Hit tree {} times.", tree_count);
 
     let trajectories = vec![
         Slope { right: 1, down: 1 },
@@ -180,7 +180,7 @@ fn main() -> Result<(), &'static str> {
         .map(|x| map.count_tree_hits(x))
         .product::<usize>();
     println!(
-        "Total number of trees encountered by multiple slope is {}",
+        "Total number of trees encountered by multiple slope is {}.",
         hits_prod
     );
 

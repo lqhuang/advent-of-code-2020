@@ -154,16 +154,16 @@ fn main() -> Result<(), &'static str> {
         return Err("not enough arguments");
     }
     let filename = &args[1];
-    println!("Load input file {}", filename);
+    println!("Load input file {}.", filename);
 
     let contents = fs::read_to_string(filename).expect("Something went wrong reading the file");
     // println!("{:?}", contents);
 
     let verified_count = verified_by_occurrs_policy(contents.clone());
-    println!("Valid password under OccursPolicy: {}", verified_count);
+    println!("Valid password under OccursPolicy: {}.", verified_count);
 
     let second_verified = verified_by_posmatch_policy(contents);
-    println!("Valid password under PosMatchPolicy: {}", second_verified);
+    println!("Valid password under PosMatchPolicy: {}.", second_verified);
 
     Ok(())
 }

@@ -341,13 +341,13 @@ fn main() -> Result<(), &'static str> {
         return Err("not enough arguments");
     }
     let filename = &args[1];
-    println!("Load input file {}", filename);
+    println!("Load input file {}.", filename);
 
     let input = fs::read_to_string(filename).expect("Something went wrong reading the file");
     let valid_kvs = parse_input(&input);
 
     println!(
-        "The number of valid passports have all required fields is {}",
+        "The number of valid passports have all required fields is {}.",
         valid_kvs.len()
     );
 
@@ -357,7 +357,7 @@ fn main() -> Result<(), &'static str> {
         .collect();
 
     println!(
-        "The number of passports satisfy all restrictions is {}",
+        "The number of passports satisfy all restrictions is {}.",
         passports.len()
     );
 
