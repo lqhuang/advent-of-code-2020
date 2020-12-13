@@ -198,21 +198,21 @@ impl Passport {
     fn from_hashmap(kvs: &HashMap<&str, &str>) -> Option<Passport> {
         // `byr` (Birth Year) - four digits; at least `1920` and at most `2002`.
         let byr = match kvs.get("byr").unwrap().parse::<usize>() {
-            Ok(i) if (1920..=2002).contains(&i) => i,
+            Ok(i @ 1920..=2002) => i,
             Err(_) => return None,
             _ => return None,
         };
 
         // `iyr` (Issue Year) - four digits; at least `2010` and at most `2020`.
         let iyr = match kvs.get("iyr").unwrap().parse::<usize>() {
-            Ok(i) if (2010..=2020).contains(&i) => i,
+            Ok(i @ 2010..=2020) => i,
             Err(_) => return None,
             _ => return None,
         };
 
         // `eyr` (Expiration Year) - four digits; at least `2020` and at most `2030`.
         let eyr = match kvs.get("eyr").unwrap().parse::<usize>() {
-            Ok(i) if (2020..=2030).contains(&i) => i,
+            Ok(i @ 2020..=2030) => i,
             Err(_) => return None,
             _ => return None,
         };
@@ -224,7 +224,7 @@ impl Passport {
         let hgt = if hgt_str.ends_with("cm") {
             let high = hgt_str.strip_suffix("cm").unwrap().parse::<usize>();
             match high {
-                Ok(i) if (150..=193).contains(&i) => Height {
+                Ok(i @ 150..=193) => Height {
                     hight: i,
                     unit: HeightUnit::Cm,
                 },
@@ -233,7 +233,7 @@ impl Passport {
         } else if hgt_str.ends_with("in") {
             let high = hgt_str.strip_suffix("in").unwrap().parse::<usize>();
             match high {
-                Ok(i) if (59..=76).contains(&i) => Height {
+                Ok(i @ 59..=76) => Height {
                     hight: i,
                     unit: HeightUnit::In,
                 },
