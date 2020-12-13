@@ -87,13 +87,12 @@
 //! **What is the Manhattan distance between that location and the ship's starting position?**
 use std::env;
 use std::fs;
-use std::ops::Add;
 
 use nom::bytes::complete::tag;
 use nom::character::complete::digit1;
 use nom::{branch::alt, sequence::tuple, IResult};
 
-#[derive(Debug, Eq, PartialEq, Clone)]
+#[derive(Debug, Eq, PartialEq)]
 enum Action {
     North(usize),
     South(usize),
@@ -119,99 +118,81 @@ impl Action {
     }
 }
 
-#[derive(Debug, Eq, PartialEq, Clone)]
-enum Direction {
-    N = 0,
-    E = 1,
-    S = 2,
-    W = 3,
-}
-
-impl Direction {
-    fn rotate(&self, ang: isize) -> Direction {
-        let i = (ang / 90) % 4;
-        let r = (self.clone() as isize + i) % 4;
-        let m = if r < 0 { r + 4 } else { r };
-        match m {
-            0 => Self::N,
-            1 => Self::E,
-            2 => Self::S,
-            3 => Self::W,
-            _ => panic!("won't be here."),
-        }
-    }
-}
-
 #[derive(Debug, Eq, PartialEq)]
 struct Position {
     x: isize,
     y: isize,
-    facing: Direction,
+    waypoint: Waypoint,
 }
 
 impl Position {
     fn get_manhattan_distance(&self, x: isize, y: isize) -> isize {
         (self.x - x).abs() + (self.y - y).abs()
     }
-}
 
-impl Add<&Action> for Position {
-    type Output = Self;
-
-    fn add(self, rhs: &Action) -> Self::Output {
-        let (x, y, facing) = (self.x, self.y, self.facing);
-        match rhs {
+    fn do_first_type(self, action: &Action) -> Self {
+        let (x, y, waypoint) = (self.x, self.y, self.waypoint);
+        match *action {
             Action::North(val) => Position {
                 x,
-                y: y + *val as isize,
-                facing,
+                y: y + val as isize,
+                waypoint,
             },
             Action::South(val) => Position {
                 x,
-                y: y - *val as isize,
-                facing,
+                y: y - val as isize,
+                waypoint,
             },
             Action::East(val) => Position {
-                x: x + *val as isize,
+                x: x + val as isize,
                 y,
-                facing,
+                waypoint,
             },
             Action::West(val) => Position {
-                x: x - *val as isize,
+                x: x - val as isize,
                 y,
-                facing,
+                waypoint,
             },
             Action::Left(ang) => Position {
                 x,
                 y,
-                facing: facing.rotate(-((*ang) as isize)),
+                waypoint: waypoint.rotate(ang as isize),
             },
             Action::Right(ang) => Position {
                 x,
                 y,
-                facing: facing.rotate(*ang as isize),
+                waypoint: waypoint.rotate(-(ang as isize)),
             },
-            Action::Forward(val) => match facing {
-                Direction::N => Position {
-                    x,
-                    y: y + *val as isize,
-                    facing,
-                },
-                Direction::S => Position {
-                    x,
-                    y: y - *val as isize,
-                    facing,
-                },
-                Direction::E => Position {
-                    x: x + *val as isize,
-                    y,
-                    facing,
-                },
-                Direction::W => Position {
-                    x: x - *val as isize,
-                    y,
-                    facing,
-                },
+            Action::Forward(val) => Position {
+                x: x + (val as isize) * waypoint.dx,
+                y: y + (val as isize) * waypoint.dy,
+                waypoint,
+            },
+        }
+    }
+
+    fn do_second_type(self, action: &Action) -> Position {
+        let (x, y, waypoint) = (self.x, self.y, self.waypoint);
+        match *action {
+            Action::North(_) | Action::South(_) | Action::East(_) | Action::West(_) => Position {
+                x,
+                y,
+                waypoint: waypoint.move_(action),
+            },
+            Action::Left(ang) => Position {
+                x,
+                y,
+                waypoint: waypoint.rotate(ang as isize), // counter-clockwise
+            },
+            Action::Right(ang) => Position {
+                x,
+                y,
+                waypoint: waypoint.rotate(-(ang as isize)), // clockwise
+            },
+            Action::Forward(val) => Position {
+                x: x + (val as isize) * waypoint.dx,
+                y: y + (val as isize) * waypoint.dy,
+                waypoint,
             },
         }
     }
@@ -254,49 +235,6 @@ impl Waypoint {
         Waypoint {
             dx: (x * theta.cos() - y * theta.sin()).round() as isize,
             dy: (x * theta.sin() + y * theta.cos()).round() as isize,
-        }
-    }
-}
-
-#[derive(Debug, Eq, PartialEq)]
-struct WaypointPosition {
-    x: isize,
-    y: isize,
-    waypoint: Waypoint,
-}
-
-impl WaypointPosition {
-    fn get_manhattan_distance(&self, x: isize, y: isize) -> isize {
-        (self.x - x).abs() + (self.y - y).abs()
-    }
-}
-
-impl WaypointPosition {
-    fn do_action(self, action: &Action) -> WaypointPosition {
-        let (x, y, waypoint) = (self.x, self.y, self.waypoint);
-        match action {
-            Action::North(_) | Action::South(_) | Action::East(_) | Action::West(_) => {
-                WaypointPosition {
-                    x,
-                    y,
-                    waypoint: waypoint.move_(action),
-                }
-            }
-            Action::Left(ang) => WaypointPosition {
-                x,
-                y,
-                waypoint: waypoint.rotate(*ang as isize), // counter-clockwise
-            },
-            Action::Right(ang) => WaypointPosition {
-                x,
-                y,
-                waypoint: waypoint.rotate(-((*ang) as isize)), // clockwise
-            },
-            Action::Forward(val) => WaypointPosition {
-                x: x + (*val as isize) * waypoint.dx,
-                y: y + (*val as isize) * waypoint.dy,
-                waypoint,
-            },
         }
     }
 }
@@ -346,20 +284,20 @@ fn main() -> Result<(), &'static str> {
     let zero = Position {
         x: 0,
         y: 0,
-        facing: Direction::E,
+        waypoint: Waypoint { dx: 1, dy: 0 },
     };
-    let first_pos = actions.iter().fold(zero, |acc, x| acc + x);
+    let first_pos = actions.iter().fold(zero, |acc, x| acc.do_first_type(x));
     println!(
         "The first location from starting position is {}",
         first_pos.get_manhattan_distance(0, 0)
     );
 
-    let zero = WaypointPosition {
+    let zero = Position {
         x: 0,
         y: 0,
         waypoint: Waypoint { dx: 10, dy: 1 },
     };
-    let second_pos = actions.iter().fold(zero, |acc, x| acc.do_action(x));
+    let second_pos = actions.iter().fold(zero, |acc, x| acc.do_second_type(x));
     println!(
         "The first location from starting position is {}",
         second_pos.get_manhattan_distance(0, 0)
@@ -397,13 +335,15 @@ mod tests {
 
     #[test]
     fn test_rotation() {
-        let raw = Direction::N;
+        let raw = Waypoint { dx: 0, dy: 1 };
+        assert_eq!(raw.rotate(90), Waypoint { dx: -1, dy: 0 });
+        assert_eq!(raw.rotate(180), Waypoint { dx: 0, dy: -1 });
+        assert_eq!(raw.rotate(-270), Waypoint { dx: -1, dy: 0 });
+        assert_eq!(raw.rotate(360), Waypoint { dx: 0, dy: 1 });
+        assert_eq!(raw.rotate(630), Waypoint { dx: 1, dy: 0 });
 
-        assert_eq!(raw.rotate(90), Direction::E);
-        assert_eq!(raw.rotate(180), Direction::S);
-        assert_eq!(raw.rotate(-270), Direction::E);
-        assert_eq!(raw.rotate(360), Direction::N);
-        assert_eq!(raw.rotate(630), Direction::W);
+        let raw = Waypoint { dx: 10, dy: 4 };
+        assert_eq!(raw.rotate(-90), Waypoint { dx: 4, dy: -10 });
     }
 
     #[test]
@@ -413,40 +353,33 @@ mod tests {
         let zero = Position {
             x: 0,
             y: 0,
-            facing: Direction::E,
+            waypoint: Waypoint { dx: 1, dy: 0 },
         };
-        let pos = actions.iter().fold(zero, |acc, x| acc + x);
+        let pos = actions.iter().fold(zero, |acc, x| acc.do_first_type(x));
         assert_eq!(
             pos,
             Position {
                 x: 17,
                 y: -8,
-                facing: Direction::S,
+                waypoint: Waypoint { dx: 0, dy: -1 },
             },
         );
         assert_eq!(pos.get_manhattan_distance(0, 0), 25)
     }
 
     #[test]
-    fn test_waypoint_rotation() {
-        let raw = Waypoint { dx: 10, dy: 4 };
-
-        assert_eq!(raw.rotate(-90), Waypoint { dx: 4, dy: -10 });
-    }
-
-    #[test]
     fn test_second_instruction() {
         let input = "F10\nN3\nF7\nR90\nF11";
         let actions = parse_input(&input);
-        let zero = WaypointPosition {
+        let zero = Position {
             x: 0,
             y: 0,
             waypoint: Waypoint { dx: 10, dy: 1 },
         };
-        let pos = actions.iter().fold(zero, |acc, x| acc.do_action(x));
+        let pos = actions.iter().fold(zero, |acc, x| acc.do_second_type(x));
         assert_eq!(
             pos,
-            WaypointPosition {
+            Position {
                 x: 214,
                 y: -72,
                 waypoint: Waypoint { dx: 4, dy: -10 },
