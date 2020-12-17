@@ -12,13 +12,13 @@
 //! single-character **actions** paired with integer input **values**. After staring at
 //! them for a few minutes, you work out what they probably mean:
 //!
-//! - Action `N` means to move _north_ by the given value.
-//! - Action `S` means to move _south_ by the given value.
-//! - Action `E` means to move _east_ by the given value.
-//! - Action `W` means to move _west_ by the given value.
-//! - Action `L` means to turn _left_ the given number of degrees.
-//! - Action `R` means to turn _right_ the given number of degrees.
-//! - Action `F` means to move _forward_ by the given value in the direction the
+//! - Action `N` means to move **north** by the given value.
+//! - Action `S` means to move **south** by the given value.
+//! - Action `E` means to move **east** by the given value.
+//! - Action `W` means to move **west** by the given value.
+//! - Action `L` means to turn **left** the given number of degrees.
+//! - Action `R` means to turn **right** the given number of degrees.
+//! - Action `F` means to move **forward** by the given value in the direction the
 //!   ship is currently facing.
 //!
 //! The ship starts by facing **east**. Only the `L` and `R`actions change the
