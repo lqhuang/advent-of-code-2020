@@ -269,14 +269,11 @@
 //! Given the new visibility method and the rule change for occupied seats
 //! becoming empty, once equilibrium is reached,
 //! **how many seats end up occupied?**
-use std::collections::HashSet;
 use std::env;
+use std::fmt;
 use std::fs;
 use std::mem;
 use std::time::Instant;
-use std::{fmt, fmt::Formatter};
-
-use itertools::Itertools;
 
 #[derive(Eq, PartialEq, Clone, Copy)]
 enum Seat {
@@ -286,7 +283,7 @@ enum Seat {
 }
 
 impl fmt::Debug for Seat {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let c = match self {
             Seat::Floor => '.',
             Seat::Empty => 'L',
@@ -314,7 +311,7 @@ struct SeatGrid {
 }
 
 impl fmt::Display for SeatGrid {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         self.grid.chunks(self.width).for_each(|x| {
             x.iter().for_each(|s| write!(f, "{:?}", s).unwrap());
             writeln!(f).unwrap();
@@ -335,46 +332,20 @@ impl SeatGrid {
         self.grid.get(y * self.width + x)
     }
 
-    // fn get_mut(&mut self, x: usize, y: usize) -> Option<&mut Seat> {
-    //     self.grid.get_mut(y * self.width + x)
-    // }
-
     fn set(&mut self, x: usize, y: usize, seat: Seat) {
-        let item = self.grid.get_mut(y * self.width + x).unwrap();
-        *item = seat;
-    }
-
-    fn gen_surrounding_coords(&self, x: usize, y: usize) -> HashSet<(usize, usize)> {
-        let xi = x as isize;
-        let yi = y as isize;
-        ((xi - 1)..=(xi + 1))
-            .cartesian_product((yi - 1)..=(yi + 1))
-            .map(|(i, j)| {
-                (
-                    clamp(i, 0, self.width as isize - 1),
-                    clamp(j, 0, self.height as isize - 1),
-                )
-            })
-            .filter_map(|(i, j)| {
-                if i == xi && j == yi {
-                    None
-                } else {
-                    Some((i as usize, j as usize))
-                }
-            })
-            .collect::<HashSet<(usize, usize)>>()
-    }
-
-    fn get_surroundings(&self, x: usize, y: usize) -> Vec<&Seat> {
-        self.gen_surrounding_coords(x, y)
-            .into_iter()
-            .filter_map(|(x, y)| self.get(x, y))
-            .collect()
+        self.grid[y * self.width + x] = seat;
     }
 
     fn surrounding_occupied(&self, x: usize, y: usize) -> usize {
-        self.get_surroundings(x, y)
-            .into_iter()
+        DIRS.iter()
+            .map(|(dx, dy)| (x as isize + *dx, y as isize + *dy))
+            .filter_map(|(i, j)| {
+                if i < 0 || i >= self.width as isize || j < 0 || j >= self.height as isize {
+                    None
+                } else {
+                    self.get(i as usize, j as usize)
+                }
+            })
             .map(|item| item.to_usize())
             .sum::<usize>()
     }
@@ -408,19 +379,17 @@ impl SeatGrid {
     }
 }
 
-fn clamp(v: isize, min: isize, max: isize) -> isize {
-    if v < min {
-        min
-    } else if v > max {
-        max
-    } else {
-        v
-    }
-}
-
-fn flap_by_surroundings(curr: &SeatGrid, next: &mut SeatGrid) {
+fn flap_seat(curr: &SeatGrid, next: &mut SeatGrid, flap_type: FlapType) {
     let width = next.width;
-    // let height = next.height;
+    let occupied_counter = match flap_type {
+        FlapType::Surrounding => SeatGrid::surrounding_occupied,
+        FlapType::VisibleSight => SeatGrid::sight_occupied,
+    };
+    let threshold = match flap_type {
+        FlapType::Surrounding => 4,
+        FlapType::VisibleSight => 5,
+    };
+
     curr.grid.iter().enumerate().for_each(|(idx, seat)| {
         let x = idx % width;
         let y = idx / width;
@@ -430,49 +399,18 @@ fn flap_by_surroundings(curr: &SeatGrid, next: &mut SeatGrid) {
             // If a seat is empty (`L`) and there are no occupied seats adjacent to it,
             // the seat becomes occupied.
             Seat::Empty => {
-                if curr.surrounding_occupied(x, y) == 0 {
+                if occupied_counter(curr, x, y) == 0 {
                     next.set(x, y, Seat::Occupied);
                 } else {
                     next.set(x, y, *seat);
                 }
             }
-            // If a seat is occupied (`#`) and four or more seats adjacent to it
-            // are also occupied, the seat becomes empty.
-            Seat::Occupied => {
-                if curr.surrounding_occupied(x, y) >= 4 {
-                    next.set(x, y, Seat::Empty);
-                } else {
-                    next.set(x, y, *seat);
-                }
-            }
-        };
-    });
-}
-
-fn flap_by_linesights(curr: &SeatGrid, next: &mut SeatGrid) {
-    let width = next.width;
-    // let height = next.height;
-    curr.grid.iter().enumerate().for_each(|(idx, seat)| {
-        let x = idx % width;
-        let y = idx / width;
-        match seat {
-            // Floor (`.`) never changes.
-            Seat::Floor => (),
-            // If a seat is empty (`L`) and there are no occupied seats adjacent to it,
-            // the seat becomes occupied.
-            Seat::Empty => {
-                if curr.sight_occupied(x, y) == 0 {
-                    next.set(x, y, Seat::Occupied);
-                } else {
-                    next.set(x, y, *seat);
-                }
-            }
-            // If a seat is occupied (`#`) and four or more seats adjacent to it
-            // are also occupied, the seat becomes empty.
+            // Part 1: If a seat is occupied (`#`) and four or more seats adjacent
+            // to it are also occupied, the seat becomes empty.
             // part 2: it now takes five or more visible occupied seats for an
             // occupied seat to become empty
             Seat::Occupied => {
-                if curr.sight_occupied(x, y) >= 5 {
+                if occupied_counter(curr, x, y) >= threshold {
                     next.set(x, y, Seat::Empty);
                 } else {
                     next.set(x, y, *seat);
@@ -482,15 +420,18 @@ fn flap_by_linesights(curr: &SeatGrid, next: &mut SeatGrid) {
     });
 }
 
-fn seat_dynamics<F>(seat_map: &SeatGrid, flat_func: F) -> SeatGrid
-where
-    F: Fn(&SeatGrid, &mut SeatGrid),
-{
+#[derive(Debug, Clone, Copy)]
+enum FlapType {
+    Surrounding,
+    VisibleSight,
+}
+
+fn seat_dynamics(seat_map: &SeatGrid, flap_type: FlapType) -> SeatGrid {
     let mut curr = seat_map.clone();
     let mut next = seat_map.clone();
 
     loop {
-        flat_func(&curr, &mut next);
+        flap_seat(&curr, &mut next, flap_type);
         if next == curr {
             break;
         } else {
@@ -542,16 +483,17 @@ fn main() -> Result<(), &'static str> {
     let seat_map = parse_input(&input);
 
     let start = Instant::now();
-    let new_map = seat_dynamics(&seat_map, flap_by_surroundings);
+    let new_map = seat_dynamics(&seat_map, FlapType::Surrounding);
     let duration = start.elapsed();
-
     println!(
         "The number of seats end up occupied via surrounding rule is {}. Time elapsed is {:?}.",
         count_occupied(&new_map.grid),
         duration,
     );
 
-    let new_map = seat_dynamics(&seat_map, flap_by_linesights);
+    let start = Instant::now();
+    let new_map = seat_dynamics(&seat_map, FlapType::VisibleSight);
+    let duration = start.elapsed();
     println!(
         "The number of seats end up occupied via sight rule is {}. Time elapsed is {:?}.",
         count_occupied(&new_map.grid),
@@ -634,16 +576,8 @@ L.LLLLLL.L
 L.LLLLL.LL
 ";
         let seat_map = parse_input(input);
-        let new_map = seat_dynamics(&seat_map, flap_by_surroundings);
+        let new_map = seat_dynamics(&seat_map, FlapType::Surrounding);
         let left = format!("{}", new_map);
-
-        assert_eq!(
-            seat_map.gen_surrounding_coords(9, 0),
-            vec![(8, 0), (9, 1), (8, 1)]
-                .into_iter()
-                .collect::<HashSet<(usize, usize)>>()
-        );
-
         let right = "#.#L.L#.##
 #LLL#LL.L#
 L.#.L..#..
@@ -660,7 +594,7 @@ L.#.L..#..
     }
 
     #[test]
-    fn test_seat_linesights() {
+    fn test_seat_sights() {
         let input = "L.LL.LL.LL
 LLLLLLL.LL
 L.L.L..L..
@@ -673,7 +607,7 @@ L.LLLLLL.L
 L.LLLLL.LL
 ";
         let seat_map = parse_input(input);
-        let new_map = seat_dynamics(&seat_map, flap_by_linesights);
+        let new_map = seat_dynamics(&seat_map, FlapType::VisibleSight);
         let left = format!("{}", new_map);
         let right = "#.L#.L#.L#
 #LLLLLL.LL
