@@ -107,25 +107,27 @@ fn _game_solver_jhenninger(starting_nums: &[usize], target: usize) -> usize {
     prev.unwrap()
 }
 
+#[allow(clippy::needless_range_loop)]
 fn game_solver(starting_nums: &[usize], nth: usize) -> usize {
+    let init_len = starting_nums.len();
     let arr_size = nth.max(*starting_nums.iter().max().unwrap() + 1);
     let mut spoken: Vec<usize> = vec![0; arr_size];
-    let mut start = starting_nums.iter().cloned();
-    let mut prev = None;
+    let mut prev = starting_nums[0];
 
     for idx in 0..nth {
-        let number = prev.map(|p| {
-            let last = replace(&mut spoken[p], idx);
-
-            idx - match last {
-                0 => idx,
-                _ => last,
-            }
-        });
-        prev = start.next().or(number);
+        let last = replace(&mut spoken[prev], idx);
+        if idx < init_len {
+            prev = starting_nums[idx];
+        } else {
+            prev = idx
+                - match last {
+                    0 => idx,
+                    _ => last,
+                };
+        }
     }
 
-    prev.unwrap()
+    prev
 }
 
 fn main() -> Result<(), &'static str> {
