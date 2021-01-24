@@ -93,7 +93,7 @@ fn parse_input(input: &str) -> Vec<usize> {
 }
 
 /// Good idea:
-/// https://github.com/jhenninger/advent-of-code-2020/blob/master/day15/src/main.rs
+/// <https://github.com/jhenninger/advent-of-code-2020/blob/master/day15/src/main.rs>
 fn _game_solver_jhenninger(starting_nums: &[usize], target: usize) -> usize {
     let mut start = starting_nums.iter().cloned();
     let mut seen = HashMap::new();

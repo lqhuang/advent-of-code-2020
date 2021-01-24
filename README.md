@@ -11,3 +11,5 @@ run all tests:
 run specific puzzle:
 
     cargo run --bin day01 ./input/day01.txt
+
+Some solutions are inspired by [@mstksg](https://github.com/mstksg/advent-of-code-2020) and [@jhenninger](https://github.com/jhenninger/advent-of-code-2020)
