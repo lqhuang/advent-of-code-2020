@@ -1,0 +1,15 @@
+var N = null;var sourcesIndex = {};
+sourcesIndex["aoc2020_rust"] = {"name":"","files":["main.rs"]};
+sourcesIndex["day01"] = {"name":"","files":["day01.rs"]};
+sourcesIndex["day02"] = {"name":"","files":["day02.rs"]};
+sourcesIndex["day03"] = {"name":"","files":["day03.rs"]};
+sourcesIndex["day04"] = {"name":"","files":["day04.rs"]};
+sourcesIndex["day05"] = {"name":"","files":["day05.rs"]};
+sourcesIndex["day06"] = {"name":"","files":["day06.rs"]};
+sourcesIndex["day09"] = {"name":"","files":["day09.rs"]};
+sourcesIndex["day11"] = {"name":"","files":["day11.rs"]};
+sourcesIndex["day12"] = {"name":"","files":["day12.rs"]};
+sourcesIndex["day15"] = {"name":"","files":["day15.rs"]};
+sourcesIndex["either"] = {"name":"","files":["lib.rs"]};
+sourcesIndex["itertools"] = {"name":"","dirs":[{"name":"adaptors","files":["mod.rs","multi_product.rs"]}],"files":["combinations.rs","combinations_with_replacement.rs","concat_impl.rs","cons_tuples_impl.rs","diff.rs","either_or_both.rs","exactly_one_err.rs","format.rs","free.rs","group_map.rs","groupbylazy.rs","impl_macros.rs","intersperse.rs","kmerge_impl.rs","lazy_buffer.rs","lib.rs","merge_join.rs","minmax.rs","multipeek_impl.rs","pad_tail.rs","peeking_take_while.rs","permutations.rs","process_results_impl.rs","put_back_n_impl.rs","rciter_impl.rs","repeatn.rs","size_hint.rs","sources.rs","tee.rs","tuple_impl.rs","unique_impl.rs","with_position.rs","zip_eq_impl.rs","zip_longest.rs","ziptuple.rs"]};
+createSourceSidebar();

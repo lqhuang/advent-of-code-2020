@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["main",""],["verified_by_occurrs_policy",""],["verified_by_posmatch_policy",""]],"struct":[["OccurrsPolicy",""],["PosMatchPolicy",""]],"trait":[["PolicyVerifier",""]]});

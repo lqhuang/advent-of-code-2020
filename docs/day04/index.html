@@ -1,0 +1,139 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="API documentation for the Rust `day04` crate."><meta name="keywords" content="rust, rustlang, rust-lang, day04"><title>day04 - Rust</title><link rel="stylesheet" type="text/css" href="../normalize.css"><link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../ayu.css" disabled ><script id="default-settings"></script><script src="../storage.js"></script><noscript><link rel="stylesheet" href="../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<link rel="alternate icon" type="image/png" href="../favicon-16x16.png">
+<link rel="alternate icon" type="image/png" href="../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../down-arrow.svg");}</style></head><body class="rustdoc mod"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../day04/index.html'><div class='logo-container rust-logo'><img src='../rust-logo.png' alt='logo'></div></a><p class="location">Crate day04</p><div class="block version"><p>Version 0.1.0</p></div><div class="sidebar-elems"><a id="all-types" href="all.html"><p>See all day04's items</p></a><div class="block items"><ul><li><a href="#structs">Structs</a></li><li><a href="#enums">Enums</a></li><li><a href="#functions">Functions</a></li></ul></div><p class="location"></p><script>window.sidebarCurrent = {name: "day04", ty: "mod", relpath: "../"};</script></div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu"><img src="../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices" role="menu"></div></div><script src="../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" class="help-button">?</button>
+                <a id="settings-menu" href="../settings.html"><img src="../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><h1 class="fqn"><span class="out-of-band"><span id="render-detail"><a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class="inner">&#x2212;</span>]</a></span><a class="srclink" href="../src/day04/day04.rs.html#1-524" title="goto source code">[src]</a></span><span class="in-band">Crate <a class="mod" href="">day04</a></span></h1><div class="docblock"><h1 id="----day-4-passport-processing----" class="section-header"><a href="#----day-4-passport-processing----">--- Day 4: Passport Processing ---</a></h1>
+<p>You arrive at the airport only to realize that you grabbed your North Pole
+Credentials instead of your passport. While these documents are extremely
+similar, North Pole Credentials aren't issued by a country and therefore
+aren't actually valid documentation for travel in most of the world.</p>
+<p>It seems like you're not the only one having problems, though; a very long
+line has formed for the automatic passport scanners, and the delay could
+upset your travel itinerary.</p>
+<p>Due to some questionable network security, you realize you might be able to
+solve both of these problems at the same time.</p>
+<p>The automatic passport scanners are slow because they're having trouble
+<strong>detecting which passports have all required fields</strong>. The expected fields
+are as follows:</p>
+<ul>
+<li><code>byr</code> (Birth Year)</li>
+<li><code>iyr</code> (Issue Year)</li>
+<li><code>eyr</code> (Expiration Year)</li>
+<li><code>hgt</code> (Height)</li>
+<li><code>hcl</code> (Hair Color)</li>
+<li><code>ecl</code> (Eye Color)</li>
+<li><code>pid</code> (Passport ID)</li>
+<li><code>cid</code> (Country ID)</li>
+</ul>
+<p>Passport data is validated in batch files (your puzzle input). Each passport
+is represented as a sequence of <code>key:value</code> pairs separated by spaces or
+newlines. Passports are separated by blank lines.</p>
+<p>Here is an example batch file containing four passports:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered">
+<span class="ident">ecl</span>:<span class="ident">gry</span> <span class="ident">pid</span>:<span class="number">860033327</span> <span class="ident">eyr</span>:<span class="number">2020</span> <span class="ident">hcl</span>:#<span class="ident">fffffd</span>
+<span class="ident">byr</span>:<span class="number">1937</span> <span class="ident">iyr</span>:<span class="number">2017</span> <span class="ident">cid</span>:<span class="number">147</span> <span class="ident">hgt</span>:<span class="number">183cm</span>
+
+<span class="ident">iyr</span>:<span class="number">2013</span> <span class="ident">ecl</span>:<span class="ident">amb</span> <span class="ident">cid</span>:<span class="number">350</span> <span class="ident">eyr</span>:<span class="number">2023</span> <span class="ident">pid</span>:<span class="number">028048884</span>
+<span class="ident">hcl</span>:#<span class="ident">cfa07d</span> <span class="ident">byr</span>:<span class="number">1929</span>
+
+<span class="ident">hcl</span>:#<span class="ident">ae17e1</span> <span class="ident">iyr</span>:<span class="number">2013</span>
+<span class="ident">eyr</span>:<span class="number">2024</span>
+<span class="ident">ecl</span>:<span class="ident">brn</span> <span class="ident">pid</span>:<span class="number">760753108</span> <span class="ident">byr</span>:<span class="number">1931</span>
+<span class="ident">hgt</span>:<span class="number">179cm</span>
+
+<span class="ident">hcl</span>:#<span class="ident">cfa07d</span> <span class="ident">eyr</span>:<span class="number">2025</span> <span class="ident">pid</span>:<span class="number">166559648</span>
+<span class="ident">iyr</span>:<span class="number">2011</span> <span class="ident">ecl</span>:<span class="ident">brn</span> <span class="ident">hgt</span>:<span class="number">59in</span></pre></div>
+<p>The first passport is <strong>valid</strong> - all eight fields are present. The second
+passport is <strong>invalid</strong> - it is missing <code>hgt</code> (the Height field).</p>
+<p>The third passport is interesting; the <strong>only missing field</strong> is <code>cid</code>, so
+it looks like data from North Pole Credentials, not a passport at all!
+Surely, nobody would mind if you made the system temporarily ignore missing
+<code>cid</code> fields. Treat this &quot;passport&quot; as valid.</p>
+<p>The fourth passport is missing two fields, <code>cid</code> and <code>byr</code>. Missing <code>cid</code> is
+fine, but missing any other field is not, so this passport is <strong>invalid</strong>.</p>
+<p>According to the above rules, your improved system would report <code>2</code> valid
+passports.</p>
+<p>Count the number of <strong>valid</strong> passports - those that have all required
+fields. Treat <code>cid</code> as optional.
+<strong>In your batch file, how many passports are valid?</strong></p>
+<h2 id="----part-two----" class="section-header"><a href="#----part-two----">--- Part Two ---</a></h2>
+<p>The line is moving more quickly now, but you overhear airport security
+talking about how passports with invalid data are getting through. Better
+add some data validation, quick!</p>
+<p>You can continue to ignore the <code>cid</code> field, but each other field has strict
+rules about what values are valid for automatic validation:</p>
+<ul>
+<li><code>byr</code> (Birth Year) - four digits; at least <code>1920</code> and at most <code>2002</code>.</li>
+<li><code>iyr</code> (Issue Year) - four digits; at least <code>2010</code> and at most <code>2020</code>.</li>
+<li><code>eyr</code> (Expiration Year) - four digits; at least <code>2020</code> and at most <code>2030</code>.</li>
+<li><code>hgt</code> (Height) - a number followed by either <code>cm</code> or <code>in</code>:
+<ul>
+<li>If <code>cm</code>, the number must be at least <code>150</code> and at most <code>193</code>.</li>
+<li>If <code>in</code>, the number must be at least <code>59</code> and at most <code>76</code>.</li>
+</ul>
+</li>
+<li><code>hcl</code> (Hair Color) - a <code>#</code> followed by exactly six characters <code>0-9</code> or <code>a-f</code>.</li>
+<li><code>ecl</code> (Eye Color) - exactly one of: <code>amb</code> <code>blu</code> <code>brn</code> <code>gry</code> <code>grn</code> <code>hzl</code> <code>oth</code>.</li>
+<li><code>pid</code> (Passport ID) - a nine-digit number, including leading zeroes.</li>
+<li><code>cid</code> (Country ID) - ignored, missing or not.</li>
+</ul>
+<p>Your job is to count the passports where all required fields are both
+<strong>present</strong> and <strong>valid</strong> according to the above rules. Here are some
+example values:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered">
+<span class="ident">byr</span> <span class="ident">valid</span>:   <span class="number">2002</span>
+<span class="ident">byr</span> <span class="ident">invalid</span>: <span class="number">2003</span>
+
+<span class="ident">hgt</span> <span class="ident">valid</span>:   <span class="number">60in</span>
+<span class="ident">hgt</span> <span class="ident">valid</span>:   <span class="number">190cm</span>
+<span class="ident">hgt</span> <span class="ident">invalid</span>: <span class="number">190in</span>
+<span class="ident">hgt</span> <span class="ident">invalid</span>: <span class="number">190</span>
+
+<span class="ident">hcl</span> <span class="ident">valid</span>:   #<span class="number">123abc</span>
+<span class="ident">hcl</span> <span class="ident">invalid</span>: #<span class="number">123abz</span>
+<span class="ident">hcl</span> <span class="ident">invalid</span>: <span class="number">123abc</span>
+
+<span class="ident">ecl</span> <span class="ident">valid</span>:   <span class="ident">brn</span>
+<span class="ident">ecl</span> <span class="ident">invalid</span>: <span class="ident">wat</span>
+
+<span class="ident">pid</span> <span class="ident">valid</span>:   <span class="number">000000001</span>
+<span class="ident">pid</span> <span class="ident">invalid</span>: <span class="number">0123456789</span></pre></div>
+<p>Here are some invalid passports:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered">
+<span class="ident">eyr</span>:<span class="number">1972</span> <span class="ident">cid</span>:<span class="number">100</span>
+<span class="ident">hcl</span>:#<span class="number">18171d</span> <span class="ident">ecl</span>:<span class="ident">amb</span> <span class="ident">hgt</span>:<span class="number">170</span> <span class="ident">pid</span>:<span class="number">186cm</span> <span class="ident">iyr</span>:<span class="number">2018</span> <span class="ident">byr</span>:<span class="number">1926</span>
+
+<span class="ident">iyr</span>:<span class="number">2019</span>
+<span class="ident">hcl</span>:#<span class="number">602927</span> <span class="ident">eyr</span>:<span class="number">1967</span> <span class="ident">hgt</span>:<span class="number">170cm</span>
+<span class="ident">ecl</span>:<span class="ident">grn</span> <span class="ident">pid</span>:<span class="number">012533040</span> <span class="ident">byr</span>:<span class="number">1946</span>
+
+<span class="ident">hcl</span>:<span class="ident">dab227</span> <span class="ident">iyr</span>:<span class="number">2012</span>
+<span class="ident">ecl</span>:<span class="ident">brn</span> <span class="ident">hgt</span>:<span class="number">182cm</span> <span class="ident">pid</span>:<span class="number">021572410</span> <span class="ident">eyr</span>:<span class="number">2020</span> <span class="ident">byr</span>:<span class="number">1992</span> <span class="ident">cid</span>:<span class="number">277</span>
+
+<span class="ident">hgt</span>:<span class="number">59cm</span> <span class="ident">ecl</span>:<span class="ident">zzz</span>
+<span class="ident">eyr</span>:<span class="number">2038</span> <span class="ident">hcl</span>:<span class="number">74454a</span> <span class="ident">iyr</span>:<span class="number">2023</span>
+<span class="ident">pid</span>:<span class="number">3556412378</span> <span class="ident">byr</span>:<span class="number">2007</span></pre></div>
+<p>Here are some valid passports:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered">
+<span class="ident">pid</span>:<span class="number">087499704</span> <span class="ident">hgt</span>:<span class="number">74in</span> <span class="ident">ecl</span>:<span class="ident">grn</span> <span class="ident">iyr</span>:<span class="number">2012</span> <span class="ident">eyr</span>:<span class="number">2030</span> <span class="ident">byr</span>:<span class="number">1980</span>
+<span class="ident">hcl</span>:#<span class="number">623a2f</span>
+
+<span class="ident">eyr</span>:<span class="number">2029</span> <span class="ident">ecl</span>:<span class="ident">blu</span> <span class="ident">cid</span>:<span class="number">129</span> <span class="ident">byr</span>:<span class="number">1989</span>
+<span class="ident">iyr</span>:<span class="number">2014</span> <span class="ident">pid</span>:<span class="number">896056539</span> <span class="ident">hcl</span>:#<span class="ident">a97842</span> <span class="ident">hgt</span>:<span class="number">165cm</span>
+
+<span class="ident">hcl</span>:#<span class="number">888785</span>
+<span class="ident">hgt</span>:<span class="number">164cm</span> <span class="ident">byr</span>:<span class="number">2001</span> <span class="ident">iyr</span>:<span class="number">2015</span> <span class="ident">cid</span>:<span class="number">88</span>
+<span class="ident">pid</span>:<span class="number">545766238</span> <span class="ident">ecl</span>:<span class="ident">hzl</span>
+<span class="ident">eyr</span>:<span class="number">2022</span>
+
+<span class="ident">iyr</span>:<span class="number">2010</span> <span class="ident">hgt</span>:<span class="number">158cm</span> <span class="ident">hcl</span>:#<span class="ident">b6652a</span> <span class="ident">ecl</span>:<span class="ident">blu</span> <span class="ident">byr</span>:<span class="number">1944</span> <span class="ident">eyr</span>:<span class="number">2021</span> <span class="ident">pid</span>:<span class="number">093154719</span></pre></div>
+<p>Count the number of <strong>valid</strong> passports - those that have all required
+fields <strong>and valid values</strong>. Continue to treat cid as optional.
+<strong>In your batch file, how many passports are valid?</strong></p>
+</div><h2 id="structs" class="section-header"><a href="#structs">Structs</a></h2>
+<table><tr class="module-item"><td><a class="struct" href="struct.HAIR_COLORS.html" title="day04::HAIR_COLORS struct">HAIR_COLORS</a></td><td class="docblock-short"></td></tr><tr class="module-item"><td><a class="struct" href="struct.Height.html" title="day04::Height struct">Height</a></td><td class="docblock-short"></td></tr><tr class="module-item"><td><a class="struct" href="struct.MUST_FIELDS.html" title="day04::MUST_FIELDS struct">MUST_FIELDS</a></td><td class="docblock-short"></td></tr><tr class="module-item"><td><a class="struct" href="struct.Passport.html" title="day04::Passport struct">Passport</a></td><td class="docblock-short"></td></tr></table><h2 id="enums" class="section-header"><a href="#enums">Enums</a></h2>
+<table><tr class="module-item"><td><a class="enum" href="enum.HeightUnit.html" title="day04::HeightUnit enum">HeightUnit</a></td><td class="docblock-short"></td></tr></table><h2 id="functions" class="section-header"><a href="#functions">Functions</a></h2>
+<table><tr class="module-item"><td><a class="fn" href="fn.is_valid_char.html" title="day04::is_valid_char fn">is_valid_char</a></td><td class="docblock-short"></td></tr><tr class="module-item"><td><a class="fn" href="fn.kv_parser.html" title="day04::kv_parser fn">kv_parser</a></td><td class="docblock-short"></td></tr><tr class="module-item"><td><a class="fn" href="fn.kvlist_parser.html" title="day04::kvlist_parser fn">kvlist_parser</a></td><td class="docblock-short"></td></tr><tr class="module-item"><td><a class="fn" href="fn.main.html" title="day04::main fn">main</a></td><td class="docblock-short"></td></tr><tr class="module-item"><td><a class="fn" href="fn.parse_input.html" title="day04::parse_input fn">parse_input</a></td><td class="docblock-short"></td></tr></table></section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../";window.currentCrate = "day04";</script><script src="../main.js"></script><script defer src="../search-index.js"></script></body></html>

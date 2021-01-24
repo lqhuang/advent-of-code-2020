@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["Action",""]],"fn":[["action_parser",""],["main",""],["parse_input",""]],"struct":[["Position",""],["Waypoint",""]]});

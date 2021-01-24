@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["Space",""]],"fn":[["main",""],["parse_input",""]],"struct":[["Map",""],["Slope",""]],"type":[["Matrix",""]]});

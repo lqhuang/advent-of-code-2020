@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["HeightUnit",""]],"fn":[["is_valid_char",""],["kv_parser",""],["kvlist_parser",""],["main",""],["parse_input",""]],"struct":[["HAIR_COLORS",""],["Height",""],["MUST_FIELDS",""],["Passport",""]]});

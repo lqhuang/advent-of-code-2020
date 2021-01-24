@@ -1,0 +1,1 @@
+initSidebarItems({"constant":[["DIRS",""]],"enum":[["FlapType",""],["Seat",""]],"fn":[["count_occupied",""],["flap_seat",""],["main",""],["parse_input",""],["seat_dynamics",""]],"struct":[["SeatGrid",""]]});
