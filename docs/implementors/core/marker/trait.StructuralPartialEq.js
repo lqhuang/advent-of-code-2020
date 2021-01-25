@@ -5,6 +5,4 @@ implementors["day04"] = [{"text":"impl StructuralPartialEq for HeightUnit","synt
 implementors["day05"] = [{"text":"impl StructuralPartialEq for BoardingPass","synthetic":false,"types":[]}];
 implementors["day11"] = [{"text":"impl StructuralPartialEq for Seat","synthetic":false,"types":[]},{"text":"impl StructuralPartialEq for SeatGrid","synthetic":false,"types":[]}];
 implementors["day12"] = [{"text":"impl StructuralPartialEq for Action","synthetic":false,"types":[]},{"text":"impl StructuralPartialEq for Position","synthetic":false,"types":[]},{"text":"impl StructuralPartialEq for Waypoint","synthetic":false,"types":[]}];
-implementors["either"] = [{"text":"impl&lt;L, R&gt; StructuralPartialEq for Either&lt;L, R&gt;","synthetic":false,"types":[]}];
-implementors["itertools"] = [{"text":"impl&lt;A, B&gt; StructuralPartialEq for EitherOrBoth&lt;A, B&gt;","synthetic":false,"types":[]},{"text":"impl&lt;T&gt; StructuralPartialEq for MinMaxResult&lt;T&gt;","synthetic":false,"types":[]},{"text":"impl&lt;T&gt; StructuralPartialEq for Position&lt;T&gt;","synthetic":false,"types":[]},{"text":"impl&lt;T&gt; StructuralPartialEq for FoldWhile&lt;T&gt;","synthetic":false,"types":[]}];
 if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

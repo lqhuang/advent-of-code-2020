@@ -5,6 +5,4 @@ implementors["day04"] = [{"text":"impl Eq for HeightUnit","synthetic":false,"typ
 implementors["day05"] = [{"text":"impl Eq for BoardingPass","synthetic":false,"types":[]}];
 implementors["day11"] = [{"text":"impl Eq for Seat","synthetic":false,"types":[]},{"text":"impl Eq for SeatGrid","synthetic":false,"types":[]}];
 implementors["day12"] = [{"text":"impl Eq for Action","synthetic":false,"types":[]},{"text":"impl Eq for Position","synthetic":false,"types":[]},{"text":"impl Eq for Waypoint","synthetic":false,"types":[]}];
-implementors["either"] = [{"text":"impl&lt;L:&nbsp;Eq, R:&nbsp;Eq&gt; Eq for Either&lt;L, R&gt;","synthetic":false,"types":[]}];
-implementors["itertools"] = [{"text":"impl&lt;A:&nbsp;Eq, B:&nbsp;Eq&gt; Eq for EitherOrBoth&lt;A, B&gt;","synthetic":false,"types":[]},{"text":"impl&lt;T:&nbsp;Eq&gt; Eq for FoldWhile&lt;T&gt;","synthetic":false,"types":[]}];
 if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

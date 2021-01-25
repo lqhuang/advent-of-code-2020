@@ -1,5 +1,5 @@
 
 doc:
 	rm -rf ./docs
-	cargo doc --bins --no-deps --release
+	RUSTDOCFLAGS="--enable-index-page -Zunstable-options" cargo +nightly doc --bins --no-deps --release
 	cp -r ./target/doc ./docs
