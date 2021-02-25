@@ -146,6 +146,7 @@ fn find_invalid(array: &[u64], preamble: usize) -> Option<u64> {
     None
 }
 
+#[allow(clippy::assign_op_pattern)]
 fn find_encryption_weakness(array: &[u64], target: u64) -> Option<Vec<u64>> {
     let cum_sum: Vec<u64> = array
         .iter()
