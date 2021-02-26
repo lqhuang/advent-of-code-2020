@@ -5,4 +5,5 @@ implementors["day04"] = [{"text":"impl Eq for HeightUnit","synthetic":false,"typ
 implementors["day05"] = [{"text":"impl Eq for BoardingPass","synthetic":false,"types":[]}];
 implementors["day11"] = [{"text":"impl Eq for Seat","synthetic":false,"types":[]},{"text":"impl Eq for SeatGrid","synthetic":false,"types":[]}];
 implementors["day12"] = [{"text":"impl Eq for Action","synthetic":false,"types":[]},{"text":"impl Eq for Position","synthetic":false,"types":[]},{"text":"impl Eq for Waypoint","synthetic":false,"types":[]}];
+implementors["day13"] = [{"text":"impl Eq for Bus","synthetic":false,"types":[]}];
 if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

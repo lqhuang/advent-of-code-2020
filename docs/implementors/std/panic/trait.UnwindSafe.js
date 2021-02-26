@@ -5,4 +5,5 @@ implementors["day04"] = [{"text":"impl UnwindSafe for MUST_FIELDS","synthetic":t
 implementors["day05"] = [{"text":"impl UnwindSafe for BoardingPass","synthetic":true,"types":[]}];
 implementors["day11"] = [{"text":"impl UnwindSafe for Seat","synthetic":true,"types":[]},{"text":"impl UnwindSafe for SeatGrid","synthetic":true,"types":[]},{"text":"impl UnwindSafe for FlapType","synthetic":true,"types":[]}];
 implementors["day12"] = [{"text":"impl UnwindSafe for Action","synthetic":true,"types":[]},{"text":"impl UnwindSafe for Position","synthetic":true,"types":[]},{"text":"impl UnwindSafe for Waypoint","synthetic":true,"types":[]}];
+implementors["day13"] = [{"text":"impl UnwindSafe for Bus","synthetic":true,"types":[]}];
 if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

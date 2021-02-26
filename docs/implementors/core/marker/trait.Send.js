@@ -5,4 +5,5 @@ implementors["day04"] = [{"text":"impl Send for MUST_FIELDS","synthetic":true,"t
 implementors["day05"] = [{"text":"impl Send for BoardingPass","synthetic":true,"types":[]}];
 implementors["day11"] = [{"text":"impl Send for Seat","synthetic":true,"types":[]},{"text":"impl Send for SeatGrid","synthetic":true,"types":[]},{"text":"impl Send for FlapType","synthetic":true,"types":[]}];
 implementors["day12"] = [{"text":"impl Send for Action","synthetic":true,"types":[]},{"text":"impl Send for Position","synthetic":true,"types":[]},{"text":"impl Send for Waypoint","synthetic":true,"types":[]}];
+implementors["day13"] = [{"text":"impl Send for Bus","synthetic":true,"types":[]}];
 if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

@@ -5,4 +5,5 @@ implementors["day04"] = [{"text":"impl StructuralPartialEq for HeightUnit","synt
 implementors["day05"] = [{"text":"impl StructuralPartialEq for BoardingPass","synthetic":false,"types":[]}];
 implementors["day11"] = [{"text":"impl StructuralPartialEq for Seat","synthetic":false,"types":[]},{"text":"impl StructuralPartialEq for SeatGrid","synthetic":false,"types":[]}];
 implementors["day12"] = [{"text":"impl StructuralPartialEq for Action","synthetic":false,"types":[]},{"text":"impl StructuralPartialEq for Position","synthetic":false,"types":[]},{"text":"impl StructuralPartialEq for Waypoint","synthetic":false,"types":[]}];
+implementors["day13"] = [{"text":"impl StructuralPartialEq for Bus","synthetic":false,"types":[]}];
 if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

@@ -198,7 +198,7 @@ fn calc_wait_time(depart_time: usize, shuttles: &[Bus]) -> usize {
     bus_id * min_wait
 }
 
-/// implement https://github.com/mstksg/advent-of-code-2020/blob/master/reflections.md#day-13
+/// implement <https://github.com/mstksg/advent-of-code-2020/blob/master/reflections.md#day-13>
 fn clac_contest(shuttles: &[Bus]) -> usize {
     let mut earliest = 0;
     let mut period = 1;

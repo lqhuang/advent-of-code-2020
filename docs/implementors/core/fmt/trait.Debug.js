@@ -5,4 +5,5 @@ implementors["day04"] = [{"text":"impl Debug for HeightUnit","synthetic":false,"
 implementors["day05"] = [{"text":"impl Debug for BoardingPass","synthetic":false,"types":[]}];
 implementors["day11"] = [{"text":"impl Debug for Seat","synthetic":false,"types":[]},{"text":"impl Debug for SeatGrid","synthetic":false,"types":[]},{"text":"impl Debug for FlapType","synthetic":false,"types":[]}];
 implementors["day12"] = [{"text":"impl Debug for Action","synthetic":false,"types":[]},{"text":"impl Debug for Position","synthetic":false,"types":[]},{"text":"impl Debug for Waypoint","synthetic":false,"types":[]}];
+implementors["day13"] = [{"text":"impl Debug for Bus","synthetic":false,"types":[]}];
 if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

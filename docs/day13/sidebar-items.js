@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["calc_wait_time",""],["clac_contest","implement https://github.com/mstksg/advent-of-code-2020/blob/master/reflections.md#day-13"],["main",""],["parse_input",""]],"struct":[["Bus",""]]});
