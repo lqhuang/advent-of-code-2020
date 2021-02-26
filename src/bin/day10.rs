@@ -189,9 +189,8 @@
 //!
 //! **What is the total number of distinct ways you can arrange the adapters to
 //! connect the charging outlet to your device?**
-
 use std::collections::HashSet;
-use std::{env, fs, usize};
+use std::{env, fs};
 
 fn parse_input(input: &str) -> Vec<usize> {
     input.lines().map(|s| s.parse::<usize>().unwrap()).collect()
